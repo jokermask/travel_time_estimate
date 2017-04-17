@@ -1,13 +1,19 @@
-origin_data_file = fopen('./dataSets/training/training_20min_avg_travel_time.csv') ;
-or_data_labels = textscan(origin_data_file, '%s %s %s %s',1,'Delimiter',',' ) ;
-od_cells = textscan(origin_data_file, '%s %s %s %s','Delimiter',',');  
-fclose(origin_data_file);
-weather_data_file = fopen('./dataSets/training/weather (table 7)_training_update.csv') ;
-wd_data_labels = textscan(weather_data_file, '%s %s %s %s %s %s %s %s %s',1,'Delimiter',',') ;
-wd_cells = textscan(weather_data_file, '%s %s %s %s %s %s %s %s %s','Delimiter',',');  
-fclose(weather_data_file) ;
-%origin_data = cell2mat(od_cells); 
-%weather_data = cell2mat(wd_cells); 
-disp('done') ;
-% for i=1:len(origin_data)
-%     origin_data(i)
+train_data = csvread('meraged_20min_avg_travel_time.csv') ;
+test_data = csvread('test_meraged_20min_avg_travel_time.csv') ;
+train_data_x = train_data(:,1:end-1) ;
+train_data_y = train_data(:,end) ;
+test_data_x = test_data(:,1:end-1) ;
+test_data_y = test_data(:,end) ;
+%mape = sum(abs(test_data_y-predict_y)./test_data_y)/length(test_data_y) ;
+%disp([test_data_y predict_y]) ;
+%disp(mape) ;
+rans = 0 ;
+for i=1:50
+    temp_train_data = sampleWithReplace(train_data) ;
+    temp_train_data_x = temp_train_data(:,1:end-1) ;
+    temp_train_data_y = temp_train_data(:,end) ;
+    ensemble = fitensemble(temp_train_data_x,temp_train_data_y,'LSBoost',100,'Tree') ;
+    predict_y = predict(ensemble,test_data_x) ;
+    rans = rans+sum(abs(test_data_y-predict_y)./test_data_y)/length(test_data_y) ;
+end
+disp(rans/50) ;
