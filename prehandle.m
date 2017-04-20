@@ -1,8 +1,8 @@
-origin_data_file = fopen('./dataSets/training/training_20min_avg_travel_time.csv') ;
+origin_data_file = fopen('./dataSets/predicting/submission_sample_travelTime.csv') ;
 or_data_labels = textscan(origin_data_file, '%s %s %s %s',1,'Delimiter',',' ) ;
 od_cells = textscan(origin_data_file, '%q %q %q %q','Delimiter',',');  
 fclose(origin_data_file);
-weather_data_file = fopen('./dataSets/training/weather (table 7)_training_update.csv') ;
+weather_data_file = fopen('./dataSets/testing_phase1/weather_test1.csv') ;
 wd_data_labels = textscan(weather_data_file, '%s %s %s %s %s %s %s %s %s',1,'Delimiter',',') ;
 wd_cells = textscan(weather_data_file, '%q %q %q %q %q %q %q %q %q','Delimiter',',');  
 fclose(weather_data_file) ;
@@ -52,4 +52,4 @@ for i=2:4
 end
 train_data = cell2mat(od_cells) ;
 train_data = [train_data(:,1:3) train_data(:,5:12) train_data(:,4)];%将预测值放到最后一列
-csvwrite('meraged_20min_avg_travel_time.csv',train_data) ;
+csvwrite('submit_meraged_20min_avg_travel_time.csv',train_data) ;
